@@ -13,7 +13,8 @@ Pod::Spec.new do |s|
   s.platforms    = { :ios => "10.0" }
   s.source       = { :git => "https://github.com/jafar-jabr/react-native-push-notifier.git", :tag => "#{s.version}" }
 
-  s.source_files = "ios/**/*.{h,m,mm,swift}"
+   s.preserve_paths = 'LICENSE', 'README.md', 'package.json', 'index.js'
+   s.source_files = "ios/**/*.{h,m,mm,swift}"
 
   s.dependency "React-Core"
 end
