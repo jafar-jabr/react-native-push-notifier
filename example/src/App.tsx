@@ -4,15 +4,17 @@ import { StyleSheet, View, Text } from 'react-native';
 import PushNotifier from 'react-native-push-notifier';
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
-
   React.useEffect(() => {
-    PushNotifier.multiply(3, 7).then(setResult);
+    PushNotifier.showInfoPush(
+      { title: 'title', body: 'body' },
+      5346454,
+      'default'
+    );
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Text>Hiii</Text>
     </View>
   );
 }

@@ -36,13 +36,13 @@
     "ios",
     "android"
   ],
-  "repository": "https://bitbucket.org/ascendnetsolutions/react-native-push-notifier",
+  "repository": "https://github.com/jafar-jabr/react-native-push-notifier",
   "author": "Jafar Jabr <jafar.jabr.dev@gmail.com> (https://github.com/jafar-jabr)",
   "license": "MIT",
   "bugs": {
-    "url": "https://bitbucket.org/ascendnetsolutions/react-native-push-notifier/issues"
+    "url": "https://github.com/jafar-jabr/react-native-push-notifier/issues"
   },
-  "homepage": "https://bitbucket.org/ascendnetsolutions/react-native-push-notifier#readme",
+  "homepage": "https://github.com/jafar-jabr/react-native-push-notifier#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
