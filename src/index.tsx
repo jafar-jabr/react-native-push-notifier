@@ -1,7 +1,19 @@
 import { NativeModules } from 'react-native';
 
 type PushNotifierType = {
-  multiply(a: number, b: number): Promise<number>;
+  showActionPush(
+    notificationData: Record<string, any>,
+    soundFile: string | null
+  ): null;
+  showInfoPush(
+    notificationData: Record<string, any>,
+    notificationId: number,
+    soundFile: string | null
+  ): null;
+  removeNotification(notificationId: number): null;
+  clearNotifications(): null;
+  runAlert(sound: string): null;
+  isAppInForeground(): Promise<boolean>;
 };
 
 const { PushNotifier } = NativeModules;
