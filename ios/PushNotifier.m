@@ -9,7 +9,7 @@ RCT_EXPORT_MODULE()
 // See // https://reactnative.dev/docs/native-modules-ios
 // and https://reactnative.dev/docs/native-modules-ios#synchronous-methods
 
-RCT_EXPORT_METHOD(showInfoPush, withBody:(nonnull NSDictionary *)notificationData notificationId:(nonnull NSNumber *)notificationId soundFile:(nonnull NSString *)soundFile)
+RCT_REMAP_METHOD(showInfoPush, withBody:(nonnull NSDictionary *)notificationData notificationId:(nonnull NSNumber *)notificationId soundFile:(nonnull NSString *)soundFile)
 {
  RCTLogInfo(@"called showInfoPush with %@ at %@", notificationId, soundFile);
 }
