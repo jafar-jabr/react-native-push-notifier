@@ -1,4 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.reactnativepushnotifier">
+          package="com.reactnativepushnotifier"
+  xmlns:tools="http://schemas.android.com/tools">
 
+  <application tools:node="merge">
+    <service android:name="com.reactnativepushnotifier.utils.NotificationsHeadlessReceiver"/>
+    <receiver android:name="com.reactnativepushnotifier.utils.NotificationsBroadcastReceiver">
+      <intent-filter>
+        <action android:name="com.reactnativepushnotifier.utils.NotificationUtils.EXTRA_NOTIFICATION" />
+      </intent-filter>
+    </receiver>
+  </application>
 </manifest>
+
