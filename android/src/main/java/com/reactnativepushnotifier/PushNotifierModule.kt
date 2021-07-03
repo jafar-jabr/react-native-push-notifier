@@ -53,9 +53,12 @@ class PushNotifierModule(reactContext: ReactApplicationContext) : ReactContextBa
   }
 
   @ReactMethod
+  fun stopAlert() {
+    ringtone?.stop()
+  }
+
+  @ReactMethod
   fun isAppInForeground(promise: Promise) {
     promise.resolve(Utils.isAppInForeground(appContext))
   }
-
-
 }

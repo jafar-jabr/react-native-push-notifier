@@ -4,15 +4,16 @@ type PushNotifierType = {
   showActionPush(
     notificationData: Record<string, any>,
     soundFile: string | null
-  ): null;
+  ): void;
   showInfoPush(
     notificationData: Record<string, any>,
     notificationId: number,
     soundFile: string | null
-  ): null;
-  removeNotification(notificationId: number): null;
-  clearNotifications(): null;
-  runAlert(sound: string): null;
+  ): void;
+  removeNotification(notificationId: number): void;
+  clearNotifications(): void;
+  runAlert(sound: string): void;
+  stopAlert(): void;
   isAppInForeground(): Promise<boolean>;
 };
 

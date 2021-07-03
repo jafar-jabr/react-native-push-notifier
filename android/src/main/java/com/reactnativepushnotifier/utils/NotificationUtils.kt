@@ -65,7 +65,6 @@ object NotificationUtils {
     }
 
     fun showActionNotification(context: Context, notificationData: ReadableMap, soundFile: String) {
-
         val notificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
 
