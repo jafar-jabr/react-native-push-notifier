@@ -13,7 +13,7 @@ type PushNotifierType = {
   removeNotification(notificationId: number): void;
   clearNotifications(): void;
   runAlert(sound: string): void;
-  stopAlert(): void;
+  stopAlert(s: string): void;
   isAppInForeground(): Promise<boolean>;
 };
 

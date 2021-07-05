@@ -69,4 +69,14 @@ RCT_REMAP_METHOD(showActionPush,
   resolve(result);
 }
 
+RCT_REMAP_METHOD(runAlert, audioName:(nonnull NSString*)name)
+{
+    NSLog(@"called with name: %@",name);
+}
+
+RCT_REMAP_METHOD(stopAlert, withNullString:(nullable NSString*)blank)
+{
+    NSLog(@"stope called with name:");
+}
+
 @end

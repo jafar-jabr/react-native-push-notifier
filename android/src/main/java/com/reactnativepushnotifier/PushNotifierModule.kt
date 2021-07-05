@@ -53,7 +53,7 @@ class PushNotifierModule(reactContext: ReactApplicationContext) : ReactContextBa
   }
 
   @ReactMethod
-  fun stopAlert() {
+  fun stopAlert(s: String) {
     ringtone?.stop()
   }
 
