@@ -5,6 +5,7 @@
 #import <React/RCTConvert.h>
 #import <React/RCTEventDispatcher.h>
 #import <React/RCTUtils.h>
+#import "RingtonePlayer.h"
 
 NSString *const RCTRemoteNotificationReceived = @"RemoteNotificationReceived";
 
@@ -71,12 +72,14 @@ RCT_REMAP_METHOD(showActionPush,
 
 RCT_REMAP_METHOD(runAlert, audioName:(nonnull NSString*)name)
 {
-    NSLog(@"called with name: %@",name);
+    NSLog(@"called with name: %@", name);
+    [[RingtonePlayer shared] playAlert: name];
 }
 
 RCT_REMAP_METHOD(stopAlert, withNullString:(nullable NSString*)blank)
 {
     NSLog(@"stope called with name:");
+    [[RingtonePlayer shared] stopAlert];
 }
 
 @end

@@ -18,6 +18,7 @@ AVAudioPlayer *audioPlayer;
   NSURL *audioURL = [NSURL fileURLWithPath: audioPath];
   NSError *audioError = nil;
   audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:audioURL error:&audioError];
+  [audioPlayer setNumberOfLoops: -1];
   if (!audioError) {
     NSLog(@"playing!");
     [audioPlayer play];
