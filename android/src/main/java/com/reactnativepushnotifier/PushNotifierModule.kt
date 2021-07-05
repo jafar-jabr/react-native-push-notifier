@@ -49,6 +49,7 @@ class PushNotifierModule(reactContext: ReactApplicationContext) : ReactContextBa
       Uri.parse("android.resource://" + appContext.packageName + "/" + costumeSound)
     }
     ringtone = RingtoneManager.getRingtone(appContext, soundUri)
+    ringtone?.setLooping(true)
     ringtone?.play()
   }
 
