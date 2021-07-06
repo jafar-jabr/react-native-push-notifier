@@ -6,6 +6,7 @@
 #import <React/RCTEventDispatcher.h>
 #import <React/RCTUtils.h>
 #import "RingtonePlayer.h"
+#import <AppTrackingTransparency/ATTrackingManager.h>
 
 NSString *const RCTRemoteNotificationReceived = @"RemoteNotificationReceived";
 
@@ -80,6 +81,23 @@ RCT_REMAP_METHOD(stopAlert, withNullString:(nullable NSString*)blank)
 {
     NSLog(@"stope called with name:");
     [[RingtonePlayer shared] stopAlert];
+}
+
+RCT_REMAP_METHOD(userTrackAlert,
+                 withResolver:(RCTPromiseResolveBlock)resolve
+                 withRejecter:(RCTPromiseRejectBlock)reject)
+{
+    if (@available(iOS 14, *)) {
+        [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
+            if (status == ATTrackingManagerAuthorizationStatusAuthorized) {
+                resolve(@"AUTHORIZED");
+            } else {
+                resolve(@"REJECTED");
+            }
+        }];
+    } else {
+        resolve(@"AUTHORIZED");
+    }
 }
 
 @end
