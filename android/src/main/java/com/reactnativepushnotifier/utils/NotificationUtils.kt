@@ -3,6 +3,7 @@ package com.reactnativepushnotifier.utils
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -46,7 +47,7 @@ object NotificationUtils {
                 costumeChannel.canBubble()
             }
             val soundResource = ResourcesResolver(context).getRaw(soundFile)
-            val alarmSound: Uri = Uri.parse("android.resource://" + context.packageName + "/" + soundResource)
+            val alarmSound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE+"://" + context.packageName + "/" + soundResource)
             val audioAttributes = AudioAttributes.Builder()
                     .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                     .setUsage(AudioAttributes.USAGE_NOTIFICATION)
@@ -60,7 +61,7 @@ object NotificationUtils {
             RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         }else {
             val nn = ResourcesResolver(context).getRaw(soundFile)
-            Uri.parse("android.resource://" + context.packageName + "/" + nn)
+            Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE+"://" + context.packageName + "/" + nn)
         }
     }
 
