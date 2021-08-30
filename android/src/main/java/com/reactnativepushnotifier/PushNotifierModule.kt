@@ -1,6 +1,5 @@
 package com.reactnativepushnotifier
 
-import android.app.Notification
 import android.app.NotificationManager
 import android.content.ContentResolver
 import android.content.Context
@@ -8,7 +7,6 @@ import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
-import android.service.notification.StatusBarNotification
 import androidx.annotation.RequiresApi
 import com.facebook.react.bridge.*
 import com.reactnativepushnotifier.utils.NotificationUtils
@@ -63,8 +61,9 @@ class PushNotifierModule(reactContext: ReactApplicationContext) : ReactContextBa
   fun cancelLastNotification() {
     val notificationManager =
       appContext.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
-    val lastNotificationId = notificationManager?.activeNotifications?.last()?.id
-    if (notificationManager != null) {
+    val notificationArray = notificationManager?.activeNotifications
+    if(notificationArray?.isEmpty()!!) {
+      val lastNotificationId = notificationArray.last()?.id
       if (lastNotificationId != null) {
         notificationManager.cancel(lastNotificationId)
       }
