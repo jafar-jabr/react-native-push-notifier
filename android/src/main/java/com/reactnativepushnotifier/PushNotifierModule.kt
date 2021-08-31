@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat.getSystemService
 import com.facebook.react.bridge.*
 import com.reactnativepushnotifier.utils.NotificationUtils
 import com.reactnativepushnotifier.utils.ResourcesResolver
@@ -61,25 +62,27 @@ class PushNotifierModule(reactContext: ReactApplicationContext) : ReactContextBa
   @RequiresApi(api = Build.VERSION_CODES.M)
   fun cancelLastNotification() {
 
-    val notificationManager =
-      appContext.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
-    val notificationArray = notificationManager?.activeNotifications
-    if(notificationArray?.isEmpty()!!) {
-      val lastNotificationId = notificationArray.last()?.id
-      if (lastNotificationId != null) {
-        notificationManager.cancel(lastNotificationId)
-      }
-    }
-    val mNotificationManager: NotificationManagerCompat = NotificationManagerCompat.from(appContext.applicationContext);
-    mNotificationManager.cancelAll();
+//    val notificationManager =
+//      appContext.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
+//    val notificationArray = notificationManager?.activeNotifications
+//    if(notificationArray?.isEmpty()!!) {
+//      val lastNotificationId = notificationArray.last()?.id
+//      if (lastNotificationId != null) {
+//        notificationManager.cancel(lastNotificationId)
+//      }
+//    }
+//    val mNotificationManager: NotificationManagerCompat = NotificationManagerCompat.from(appContext.applicationContext);
+//    mNotificationManager.cancelAll();
+    val notificationManager = appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    notificationManager.cancelAll()
   }
 
   @ReactMethod
   fun stopAlert(s: String) {
     ringtone?.stop()
-//    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//      cancelLastNotification();
-//    }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      cancelLastNotification();
+    }
   }
 
   @ReactMethod
