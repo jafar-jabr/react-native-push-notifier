@@ -81,6 +81,8 @@ RCT_REMAP_METHOD(stopAlert, withNullString:(nullable NSString*)blank)
 {
     NSLog(@"stope called with name:");
     [[RingtonePlayer shared] stopAlert];
+    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+    [center removeAllDeliveredNotifications];
 }
 
 RCT_REMAP_METHOD(userTrackAlert,
