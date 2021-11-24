@@ -2,7 +2,7 @@ package com.reactnativepushnotifier.utils
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.PendingIntent.*
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
@@ -60,55 +60,9 @@ object NotificationUtils {
         return if (soundFile == "default") {
             RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         }else {
-            val nn = ResourcesResolver(context).getRaw(soundFile)
-            Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE+"://" + context.packageName + "/" + nn)
+            val ringT = ResourcesResolver(context).getRaw(soundFile)
+            Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE+"://" + context.packageName + "/" + ringT)
         }
-    }
-
-    fun showActionNotification(context: Context, notificationData: ReadableMap, soundFile: String) {
-        val notificationManager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
-
-        if (soundFile == "default" && notificationManager != null) {
-                createDefaultChannel(notificationManager)
-        }else if(notificationManager != null){
-            createCostumeChannel(context, notificationManager, soundFile)
-        }
-        val channelId: String = if(soundFile == "default") {
-            DEFAULT_CHANNEL_ID
-        }else{
-            COSTUME_CHANNEL_ID
-        }
-        val appIconResourceId: Int = context.applicationInfo.icon
-        val notificationId: Int = System.currentTimeMillis().toInt()
-        val notificationDataBundle = Arguments.toBundle(notificationData)
-        val acceptIntentData = Intent(context, NotificationsBroadcastReceiver::class.java)
-        acceptIntentData.putExtra("action", "accept")
-        acceptIntentData.putExtra("notificationId", notificationId)
-        acceptIntentData.putExtra(EXTRA_NOTIFICATION, notificationDataBundle)
-        val acceptPendingIntent = PendingIntent.getBroadcast(context, notificationId, acceptIntentData, PendingIntent.FLAG_UPDATE_CURRENT)
-
-        val rejectIntentData = Intent(context, NotificationsBroadcastReceiver::class.java)
-        rejectIntentData.putExtra("action", "reject")
-        rejectIntentData.putExtra("notificationId", notificationId)
-        rejectIntentData.putExtra(EXTRA_NOTIFICATION, notificationDataBundle)
-        val rejectPendingIntent = PendingIntent.getBroadcast(context, notificationId + 1, rejectIntentData, PendingIntent.FLAG_UPDATE_CURRENT)
-
-        val notificationBuilder: NotificationCompat.Builder =
-                NotificationCompat.Builder(context, channelId)
-                        .addAction(
-                                appIconResourceId, "accept",
-                                acceptPendingIntent
-                        )
-                        .addAction(
-                                appIconResourceId, "reject",
-                                rejectPendingIntent
-                        )
-                        .setSmallIcon(appIconResourceId)
-                        .setSound(getSound(context, soundFile))
-                        .setContentTitle(notificationData.getString("title"))
-                        .setContentText(notificationData.getString("body"))
-        notificationManager?.notify(notificationId, notificationBuilder.build())
     }
 
     @JvmStatic
@@ -132,7 +86,8 @@ object NotificationUtils {
         clickIntentData.putExtra("notificationId", notificationId)
         val notificationDataBundle = Arguments.toBundle(notificationData)
         clickIntentData.putExtra(EXTRA_NOTIFICATION, notificationDataBundle)
-        val clickPendingIntent = PendingIntent.getBroadcast(context, notificationId, clickIntentData, PendingIntent.FLAG_UPDATE_CURRENT)
+        val acceptPendingIntent = getBroadcast(context, notificationId, clickIntentData, FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT)
+
         val title = notificationDataBundle!!.getString("title", "")
         val body = notificationDataBundle.getString("body", "")
         val notificationBuilder: NotificationCompat.Builder =
@@ -143,7 +98,10 @@ object NotificationUtils {
                         .setContentText(body)
                         .setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
                         .setColor(Color.CYAN)
-                        .setContentIntent(clickPendingIntent)
+                        .addAction(
+                         appIconResourceId, "accept",
+                         acceptPendingIntent
+                         )
         notificationManager?.notify(notificationId, notificationBuilder.build())
     }
 }

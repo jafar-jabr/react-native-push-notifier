@@ -1,10 +1,6 @@
 import { NativeModules } from 'react-native';
 
 type PushNotifierType = {
-  showActionPush(
-    notificationData: Record<string, any>,
-    soundFile: string | null
-  ): void;
   showInfoPush(
     notificationData: Record<string, any>,
     notificationId: number,

@@ -1,7 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.reactnativepushnotifier"
   xmlns:tools="http://schemas.android.com/tools">
-
   <application tools:node="merge">
     <service android:name="com.reactnativepushnotifier.utils.NotificationsHeadlessReceiver"/>
     <receiver android:exported="false" android:name="com.reactnativepushnotifier.utils.NotificationsBroadcastReceiver">

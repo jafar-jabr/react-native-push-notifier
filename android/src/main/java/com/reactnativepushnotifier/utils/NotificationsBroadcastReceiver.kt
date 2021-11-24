@@ -1,6 +1,7 @@
 package com.reactnativepushnotifier.utils
 
 import android.app.PendingIntent
+import android.app.PendingIntent.*
 import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
@@ -26,10 +27,10 @@ class NotificationsBroadcastReceiver : BroadcastReceiver() {
                   "null"
                 }
                 val appIntent = Intent(context, Class.forName(mainActivityClassName))
-                val contentIntent: PendingIntent = PendingIntent.getActivity(context, 0, appIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+                val contentIntent: PendingIntent = getActivity(context, 0, appIntent, FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT)
                 try {
                     contentIntent.send()
-                } catch (e: PendingIntent.CanceledException) {
+                } catch (e: CanceledException) {
                     e.printStackTrace()
                 }
                 /**

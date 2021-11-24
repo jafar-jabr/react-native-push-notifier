@@ -8,8 +8,6 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat.getSystemService
 import com.facebook.react.bridge.*
 import com.reactnativepushnotifier.utils.NotificationUtils
 import com.reactnativepushnotifier.utils.ResourcesResolver
@@ -26,13 +24,8 @@ class PushNotifierModule(reactContext: ReactApplicationContext) : ReactContextBa
     }
 
   @ReactMethod
-  fun showActionPush(notificationData: ReadableMap, soundFile: String) {
-    NotificationUtils.showActionNotification(appContext, notificationData, soundFile.toLowerCase(Locale.ENGLISH))
-  }
-
-  @ReactMethod
   fun showInfoPush(notificationData: ReadableMap, notificationId: Int, soundFile: String= "default") {
-    NotificationUtils.showInfoNotification(appContext, notificationData, notificationId, soundFile.toLowerCase(Locale.ENGLISH))
+    NotificationUtils.showInfoNotification(appContext, notificationData, notificationId, soundFile.lowercase(Locale.ENGLISH))
   }
   @ReactMethod
   fun removeNotification(notificationId: Int) {
@@ -55,24 +48,12 @@ class PushNotifierModule(reactContext: ReactApplicationContext) : ReactContextBa
       Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE+"://" + appContext.packageName + "/" + costumeSound)
     }
     ringtone = RingtoneManager.getRingtone(appContext, soundUri)
-    ringtone?.setLooping(true)
+    ringtone?.isLooping = true
     ringtone?.play()
   }
 
   @RequiresApi(api = Build.VERSION_CODES.M)
   fun cancelLastNotification() {
-
-//    val notificationManager =
-//      appContext.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
-//    val notificationArray = notificationManager?.activeNotifications
-//    if(notificationArray?.isEmpty()!!) {
-//      val lastNotificationId = notificationArray.last()?.id
-//      if (lastNotificationId != null) {
-//        notificationManager.cancel(lastNotificationId)
-//      }
-//    }
-//    val mNotificationManager: NotificationManagerCompat = NotificationManagerCompat.from(appContext.applicationContext);
-//    mNotificationManager.cancelAll();
     val notificationManager = appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     notificationManager.cancelAll()
   }
@@ -80,9 +61,7 @@ class PushNotifierModule(reactContext: ReactApplicationContext) : ReactContextBa
   @ReactMethod
   fun stopAlert(s: String) {
     ringtone?.stop()
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      cancelLastNotification();
-    }
+    cancelLastNotification();
   }
 
   @ReactMethod

@@ -1,6 +1,6 @@
 {
   "name": "react-native-push-notifier",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "to handle firebase incoming push notifications",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
