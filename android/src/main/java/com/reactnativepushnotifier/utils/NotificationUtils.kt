@@ -80,22 +80,19 @@ object NotificationUtils {
         }else{
             COSTUME_CHANNEL_ID
         }
-        val appIconResourceId: Int = context.applicationInfo.icon
+        val notificationIcon: Int = ResourcesResolver(context).getDrawable("notification_icon")
         val clickIntentData = Intent(context, NotificationsBroadcastReceiver::class.java)
         clickIntentData.putExtra("action", "clicked")
         clickIntentData.putExtra("notificationId", notificationId)
         val notificationDataBundle = Arguments.toBundle(notificationData)
         clickIntentData.putExtra(EXTRA_NOTIFICATION, notificationDataBundle)
         val actionPendingIntent = getBroadcast(context, notificationId, clickIntentData, FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT)
-        val action = NotificationCompat.Action.Builder(
-         appIconResourceId, "open", actionPendingIntent
-        ).build()
+        val action = NotificationCompat.Action.Builder(0, "open", actionPendingIntent).build()
         val title = notificationDataBundle!!.getString("title", "")
         val body = notificationDataBundle.getString("body", "")
         val notificationBuilder: NotificationCompat.Builder =
                 NotificationCompat.Builder(context, channelId)
-                        .setSmallIcon(appIconResourceId)
-                        .setSound(getSound(context, soundFile))
+                        .setSmallIcon(notificationIcon)
                         .setContentTitle(title)
                         .setContentText(body)
                         .setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
