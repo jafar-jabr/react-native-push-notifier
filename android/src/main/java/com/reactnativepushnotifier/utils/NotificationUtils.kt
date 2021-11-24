@@ -86,8 +86,10 @@ object NotificationUtils {
         clickIntentData.putExtra("notificationId", notificationId)
         val notificationDataBundle = Arguments.toBundle(notificationData)
         clickIntentData.putExtra(EXTRA_NOTIFICATION, notificationDataBundle)
-        val acceptPendingIntent = getBroadcast(context, notificationId, clickIntentData, FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT)
-
+        val actionPendingIntent = getBroadcast(context, notificationId, clickIntentData, FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT)
+        val action = NotificationCompat.Action.Builder(
+         appIconResourceId, "open", actionPendingIntent
+        ).build()
         val title = notificationDataBundle!!.getString("title", "")
         val body = notificationDataBundle.getString("body", "")
         val notificationBuilder: NotificationCompat.Builder =
@@ -98,10 +100,7 @@ object NotificationUtils {
                         .setContentText(body)
                         .setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
                         .setColor(Color.CYAN)
-                        .addAction(
-                         appIconResourceId, "accept",
-                         acceptPendingIntent
-                         )
+                        .addAction(action)
         notificationManager?.notify(notificationId, notificationBuilder.build())
     }
 }
