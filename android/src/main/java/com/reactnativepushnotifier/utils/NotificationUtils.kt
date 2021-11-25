@@ -87,17 +87,19 @@ object NotificationUtils {
         val notificationDataBundle = Arguments.toBundle(notificationData)
         clickIntentData.putExtra(EXTRA_NOTIFICATION, notificationDataBundle)
         val actionPendingIntent = getBroadcast(context, notificationId, clickIntentData, FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT)
-        val action = NotificationCompat.Action.Builder(0, "open", actionPendingIntent).build()
+
+//        val action = NotificationCompat.Action.Builder(0, "open", actionPendingIntent).build()
         val title = notificationDataBundle!!.getString("title", "")
         val body = notificationDataBundle.getString("body", "")
+
         val notificationBuilder: NotificationCompat.Builder =
                 NotificationCompat.Builder(context, channelId)
                         .setSmallIcon(notificationIcon)
+                        .setContentIntent(actionPendingIntent)
                         .setContentTitle(title)
                         .setContentText(body)
                         .setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
                         .setColor(Color.CYAN)
-                        .addAction(action)
         notificationManager?.notify(notificationId, notificationBuilder.build())
     }
 }
