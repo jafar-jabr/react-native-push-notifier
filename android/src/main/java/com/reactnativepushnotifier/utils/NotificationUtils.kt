@@ -1,5 +1,6 @@
 package com.reactnativepushnotifier.utils
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent.*
@@ -100,6 +101,8 @@ object NotificationUtils {
                         .setContentText(body)
                         .setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
                         .setColor(Color.CYAN)
+                        .setDefaults(Notification.DEFAULT_VIBRATE)
+                        .setDefaults(Notification.DEFAULT_SOUND)
         notificationManager?.notify(notificationId, notificationBuilder.build())
     }
 }
