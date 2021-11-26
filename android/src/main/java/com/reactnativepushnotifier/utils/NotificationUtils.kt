@@ -101,8 +101,11 @@ object NotificationUtils {
                         .setContentText(body)
                         .setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
                         .setColor(Color.CYAN)
-                        .setDefaults(Notification.DEFAULT_VIBRATE)
-                        .setDefaults(Notification.DEFAULT_SOUND)
+                if(soundFile != "default") {
+                  notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE)
+                    .setDefaults(Notification.DEFAULT_SOUND)
+                }
+
         notificationManager?.notify(notificationId, notificationBuilder.build())
     }
 }
