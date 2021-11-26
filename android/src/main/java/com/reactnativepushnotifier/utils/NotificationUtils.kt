@@ -70,17 +70,20 @@ object NotificationUtils {
     fun showInfoNotification(context: Context, notificationData: ReadableMap, notificationId: Int, soundFile: String) {
         val notificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
-
-        if (soundFile == "default" && notificationManager != null) {
-            createDefaultChannel(notificationManager)
-        }else if(notificationManager != null){
-            createCostumeChannel(context, notificationManager, soundFile)
-        }
-        val channelId: String = if(soundFile == "default") {
-            DEFAULT_CHANNEL_ID
-        }else{
-            COSTUME_CHANNEL_ID
-        }
+      if(notificationManager != null) {
+        createDefaultChannel(notificationManager)
+      }
+//        if (soundFile == "default" && notificationManager != null) {
+//            createDefaultChannel(notificationManager)
+//        }else if(notificationManager != null){
+//            createCostumeChannel(context, notificationManager, soundFile)
+//        }
+//        val channelId: String = if(soundFile == "default") {
+//            DEFAULT_CHANNEL_ID
+//        }else{
+//            COSTUME_CHANNEL_ID
+//        }
+        val channelId = DEFAULT_CHANNEL_ID;
         val notificationIcon: Int = ResourcesResolver(context).getDrawable("notification_icon")
         val clickIntentData = Intent(context, NotificationsBroadcastReceiver::class.java)
         clickIntentData.putExtra("action", "clicked")
@@ -101,7 +104,7 @@ object NotificationUtils {
                         .setContentText(body)
                         .setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
                         .setColor(Color.CYAN)
-                if(soundFile != "default") {
+                if(soundFile == "default") {
                   notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE)
                     .setDefaults(Notification.DEFAULT_SOUND)
                 }
