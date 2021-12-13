@@ -6,9 +6,6 @@ import android.content.*
 import android.os.Bundle
 import com.facebook.react.HeadlessJsTaskService
 import android.content.res.Resources.NotFoundException
-import android.media.Ringtone
-import android.media.RingtoneManager
-import android.net.Uri
 
 class NotificationsBroadcastReceiver : BroadcastReceiver() {
 
@@ -50,13 +47,8 @@ class NotificationsBroadcastReceiver : BroadcastReceiver() {
                     notification.putInt("notificationId", notificationId)
                     headlessIntent.putExtra(NotificationUtils.EXTRA_NOTIFICATION, notification)
                     val name: ComponentName? = context.startService(headlessIntent)
-                    if (name != null && action == "clicked") {
+                    if (name != null) {
                         HeadlessJsTaskService.acquireWakeLockNow(context)
-                    } else {
-                      val costumeSound = ResourcesResolver(context).getRaw("wm_ringtone")
-                      val soundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE+"://" + context.packageName + "/" + costumeSound)
-                      val ringtone: Ringtone = RingtoneManager.getRingtone(context, soundUri)
-                      ringtone.stop()
                     }
                 }catch (ignored: IllegalStateException){
                 }
