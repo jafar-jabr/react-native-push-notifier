@@ -12,6 +12,7 @@ type PushNotifierType = {
   stopAlert(s: string): void;
   isAppInForeground(): Promise<boolean>;
   userTrackAlert(): Promise<string>;
+  audioPermission(): Promise<string>;
 };
 
 const { PushNotifier } = NativeModules;

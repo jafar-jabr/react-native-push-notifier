@@ -7,6 +7,7 @@
 #import <React/RCTUtils.h>
 #import "RingtonePlayer.h"
 #import <AppTrackingTransparency/ATTrackingManager.h>
+#import <AVFoundation/AVFoundation.h>
 
 NSString *const RCTRemoteNotificationReceived = @"RemoteNotificationReceived";
 
@@ -99,6 +100,24 @@ RCT_REMAP_METHOD(userTrackAlert,
         }];
     } else {
         resolve(@"AUTHORIZED");
+    }
+}
+
+RCT_REMAP_METHOD(audioPermission,
+                 withResolv:(RCTPromiseResolveBlock)resolve
+                 withReject:(RCTPromiseRejectBlock)reject)
+{
+    if([[AVAudioSession sharedInstance] respondsToSelector:@selector(requestRecordPermission)])
+    {
+        [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
+            if (granted) {
+                resolve(@"AUTHORIZED");
+            } else {
+                resolve(@"REJECTED");
+            }
+        }];
+    } else {
+        resolve(@"REJECTED");
     }
 }
 
