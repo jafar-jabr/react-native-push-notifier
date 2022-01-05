@@ -107,18 +107,17 @@ RCT_REMAP_METHOD(audioPermission,
                  withResolv:(RCTPromiseResolveBlock)resolve
                  withReject:(RCTPromiseRejectBlock)reject)
 {
-    if([[AVAudioSession sharedInstance] respondsToSelector:@selector(requestRecordPermission)])
-    {
-        [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
-            if (granted) {
-                resolve(@"AUTHORIZED");
-            } else {
-                resolve(@"REJECTED");
-            }
+     AVAudioSession *session = [AVAudioSession sharedInstance];
+
+        // AZ DEBUG @@ iOS 7+
+       [session requestRecordPermission:^(BOOL granted) {
+           if (granted) {
+                          resolve(@"AUTHORIZED");
+                      } else {
+                          resolve(@"REJECTED");
+                      }
+
         }];
-    } else {
-        resolve(@"REJECTED");
-    }
 }
 
 @end
