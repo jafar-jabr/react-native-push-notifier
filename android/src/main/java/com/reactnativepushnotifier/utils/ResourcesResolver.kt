@@ -20,4 +20,7 @@ class ResourcesResolver(applicationContext: Context) {
     fun getRaw(resourceName: String?): Int {
         return getAppResource(resourceName, "raw")
     }
+    fun getLayout(resourceName: String?): Int {
+    return getAppResource(resourceName, "layout")
+   }
 }

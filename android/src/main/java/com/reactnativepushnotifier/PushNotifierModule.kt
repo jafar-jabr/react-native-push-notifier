@@ -68,4 +68,10 @@ class PushNotifierModule(reactContext: ReactApplicationContext) : ReactContextBa
   fun isAppInForeground(promise: Promise) {
     promise.resolve(Utils.isAppInForeground(appContext))
   }
+
+  @ReactMethod
+  fun showIncomingCall(promise: Promise) {
+    val dictionary = mapOf("title" to "hello", "body" to "there")
+    NotificationUtils.showCallNotification(appContext, dictionary as ReadableMap)
+  }
 }
