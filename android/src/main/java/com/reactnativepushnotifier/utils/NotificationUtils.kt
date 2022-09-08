@@ -1,21 +1,26 @@
 package com.reactnativepushnotifier.utils
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.app.PendingIntent.*
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.graphics.Color
+import android.graphics.PixelFormat
+import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
+import android.view.View
+import android.view.WindowManager
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReadableMap
 import java.util.*
 
@@ -63,7 +68,75 @@ object NotificationUtils {
     clickIntentData.putExtra(EXTRA_NOTIFICATION, notificationDataBundle)
     return getBroadcast(context, notificationId, clickIntentData, FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT)
   }
-    @JvmStatic
+
+  private fun callAlertDialog(context: Context, builder: AlertDialog.Builder) {
+    val costumeSound = ResourcesResolver(context).getRaw("call_ringtone")
+    val soundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE+"://" + context.packageName + "/" + costumeSound)
+    val ringtone = RingtoneManager.getRingtone(context, soundUri)
+    ringtone?.play()
+    val alertBuilder =
+      builder.setCancelable(true)
+      builder.setTitle("Incoming Call")
+      builder.setMessage("Call from xxxx")
+      builder.setPositiveButton(
+        "Answer"
+      ) { dialog, which ->
+        ringtone.stop()
+      }
+      builder.setNegativeButton(
+        "Reject"
+      ) { dialog, which ->
+        ringtone.stop()
+      }
+      val alert = alertBuilder.create()
+      alert.show()
+      val timer = Timer()
+     timer.schedule(object : TimerTask() {
+      override fun run() {
+        alert.dismiss()
+        timer.cancel()
+        ringtone.stop()
+      }
+    }, 10000)
+  }
+  fun showActionNotification(context: Context, notificationData: ReadableMap, activity: Activity, promise: Promise) {
+    val builder = AlertDialog.Builder(activity, android.R.style.Theme_Material_Light_Dialog_Alert)
+    val notificationDataBundle = Arguments.toBundle(notificationData)
+    val callerName = notificationDataBundle!!.getString("callerName", "")
+    val costumeSound = ResourcesResolver(context).getRaw("call_ringtone")
+    val soundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE+"://" + context.packageName + "/" + costumeSound)
+    val ringtone = RingtoneManager.getRingtone(context, soundUri)
+    ringtone?.play()
+    val alertBuilder =
+      builder.setCancelable(true)
+    builder.setTitle("Incoming Call")
+    builder.setMessage("Call from $callerName")
+    builder.setPositiveButton(
+      "Answer"
+    ) { dialog, which ->
+      ringtone.stop()
+      promise.resolve("answered")
+    }
+    builder.setNegativeButton(
+      "Reject"
+    ) { dialog, which ->
+      ringtone.stop()
+      promise.resolve("rejected")
+    }
+    val alert = alertBuilder.create()
+    alert.show()
+    val timer = Timer()
+    timer.schedule(object : TimerTask() {
+      override fun run() {
+        alert.dismiss()
+        timer.cancel()
+        ringtone.stop()
+        promise.resolve("expired")
+      }
+    }, 10000)
+  }
+
+  @JvmStatic
     fun showInfoNotification(context: Context, notificationData: ReadableMap, notificationId: Int, soundFile: String) {
         val notificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
@@ -96,10 +169,10 @@ object NotificationUtils {
 
   @JvmStatic
   fun showCallNotification(context: Context, notificationData: ReadableMap) {
-    val fullScreenIntent = Intent(context, Class.forName(context.packageName))
-
-    val fullScreenPendingIntent = getActivity(context, 0,
-      fullScreenIntent, FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE)
+//    val fullScreenIntent = Intent(context, Class.forName(context.packageName).javaClass)
+//
+//    val fullScreenPendingIntent = getActivity(context, 0,
+//      fullScreenIntent, FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE)
 
     val notificationManager = NotificationManagerCompat.from(context)
     createCallChannel(notificationManager)
@@ -110,9 +183,19 @@ object NotificationUtils {
     val title = notificationDataBundle!!.getString("title", "")
     val body = notificationDataBundle.getString("body", "")
 
+    val pendingIntent = createNotificationIntent(context, notificationId, notificationDataBundle,"clicked")
+
+//    val remoteView = RemoteViews(context.packageName, R.layout.notification_custom)
+
+// Set the PendingIntent that will “shoot” when the button is clicked. A normal onClickListener won’t work here – again, the notification will live outside our process
+
+//    remoteView.setOnClickPendingIntent(R.id.button_accept_call, pendingIntent)
+
+// Add to our long-suffering builder
+
     val costumeSound = ResourcesResolver(context).getRaw("call_ringtone")
     val ringtone = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE+"://" + context.packageName + "/" + costumeSound)
-    val pendingIntent = createNotificationIntent(context, notificationId, notificationDataBundle,"clicked")
+
     val notificationBuilder: NotificationCompat.Builder =
       NotificationCompat.Builder(context, channelId)
         .setSmallIcon(notificationIcon)
@@ -123,7 +206,9 @@ object NotificationUtils {
         .setCategory(NotificationCompat.CATEGORY_CALL)
         .setSound(ringtone)
         .setVibrate(longArrayOf(1L, 2L, 3L))
-        .setFullScreenIntent(fullScreenPendingIntent, true)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+      notificationBuilder.priority = NotificationManager.IMPORTANCE_HIGH
+    }
     notificationManager.notify(notificationId, notificationBuilder.build())
   }
 }

@@ -70,8 +70,13 @@ class PushNotifierModule(reactContext: ReactApplicationContext) : ReactContextBa
   }
 
   @ReactMethod
-  fun showIncomingCall(promise: Promise) {
-    val dictionary = mapOf("title" to "hello", "body" to "there")
-    NotificationUtils.showCallNotification(appContext, dictionary as ReadableMap)
+  fun showIncomingCall(notificationData: ReadableMap, promise: Promise) {
+    val dictionary: HashMap<String, String> = HashMap<String, String>()
+    dictionary.put("title", "hello")
+    dictionary["body"] = "there"
+    val activity = currentActivity
+    if (activity != null) {
+      NotificationUtils.showActionNotification(appContext, notificationData, activity, promise)
+    }
   }
 }
