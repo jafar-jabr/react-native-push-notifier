@@ -14,6 +14,7 @@ type PushNotifierType = {
   userTrackAlert(): Promise<string>;
   audioPermission(): Promise<string>;
   showIncomingCall(notificationData: Record<string, any>): Promise<string>;
+  callPermissions(): Promise<any>;
 };
 
 const { PushNotifier } = NativeModules;

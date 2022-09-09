@@ -23,4 +23,8 @@ class ResourcesResolver(applicationContext: Context) {
     fun getLayout(resourceName: String?): Int {
     return getAppResource(resourceName, "layout")
    }
+
+   fun getStyle(resourceName: String?): Int {
+    return getAppResource(resourceName, "style")
+   }
 }

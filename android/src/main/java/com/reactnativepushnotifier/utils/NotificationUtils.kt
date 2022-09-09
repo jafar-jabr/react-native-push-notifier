@@ -1,27 +1,26 @@
 package com.reactnativepushnotifier.utils
 
+import android.Manifest
 import android.app.*
 import android.app.PendingIntent.*
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.content.pm.PackageManager
 import android.graphics.Color
-import android.graphics.PixelFormat
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
-import android.view.View
-import android.view.WindowManager
-import androidx.core.app.ActivityCompat.startActivityForResult
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.bridge.WritableMap
+import com.facebook.react.modules.permissions.PermissionsModule
 import java.util.*
 
 
@@ -100,6 +99,7 @@ object NotificationUtils {
     }, 10000)
   }
   fun showActionNotification(context: Context, notificationData: ReadableMap, activity: Activity, promise: Promise) {
+    val style = ResourcesResolver(context).getStyle("callDialog")
     val builder = AlertDialog.Builder(activity, android.R.style.Theme_Material_Light_Dialog_Alert)
     val notificationDataBundle = Arguments.toBundle(notificationData)
     val callerName = notificationDataBundle!!.getString("callerName", "")
