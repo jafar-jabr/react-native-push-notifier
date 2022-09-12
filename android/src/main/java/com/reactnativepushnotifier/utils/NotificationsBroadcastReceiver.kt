@@ -5,7 +5,7 @@ import android.app.PendingIntent.*
 import android.content.*
 import android.os.Bundle
 import com.facebook.react.HeadlessJsTaskService
-import android.content.res.Resources.NotFoundException
+import androidx.core.app.NotificationManagerCompat
 
 class NotificationsBroadcastReceiver : BroadcastReceiver() {
 
@@ -17,13 +17,8 @@ class NotificationsBroadcastReceiver : BroadcastReceiver() {
             if (notification != null) {
                 val action = intent.getStringExtra("action")
                 val notificationId = intent.getIntExtra("notificationId", 1)
-                val mainActivityResId = context.resources.getIdentifier("main_activity_name", "string", context.packageName)
-                val mainActivityClassName: String = try {
-                 context.getString(mainActivityResId)
-                } catch (e: NotFoundException) {
-                  "null"
-                }
-                val appIntent = Intent(context, Class.forName(mainActivityClassName))
+                val mainActivityClassName = intent.getStringExtra("activityName")
+                val appIntent = Intent(context, mainActivityClassName?.let { Class.forName(it) })
                 val contentIntent: PendingIntent = getActivity(context, 0, appIntent, FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT)
                 try {
                     contentIntent.send()
@@ -33,8 +28,8 @@ class NotificationsBroadcastReceiver : BroadcastReceiver() {
                 /**
                  * collapse notification bar
                  */
-                val closeIntent = Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
-                context.sendBroadcast(closeIntent)
+//                val closeIntent = Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
+//                context.sendBroadcast(closeIntent)
                 /**
                  * ###################################
                  */
@@ -50,6 +45,8 @@ class NotificationsBroadcastReceiver : BroadcastReceiver() {
                     if (name != null) {
                         HeadlessJsTaskService.acquireWakeLockNow(context)
                     }
+                  val notificationManager = NotificationManagerCompat.from(context)
+                  notificationManager.cancel(notificationId)
                 }catch (ignored: IllegalStateException){
                 }
             }

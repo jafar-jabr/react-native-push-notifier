@@ -10,6 +10,7 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationManagerCompat
 import com.facebook.react.bridge.*
 import com.facebook.react.modules.permissions.PermissionsModule
 import com.reactnativepushnotifier.utils.NotificationUtils
@@ -59,6 +60,11 @@ class PushNotifierModule(reactContext: ReactApplicationContext) : ReactContextBa
   fun cancelLastNotification() {
     val notificationManager = appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     notificationManager.cancelAll()
+  }
+
+  fun cancelCallPushNotification() {
+    val notificationManager = NotificationManagerCompat.from(appContext)
+    notificationManager.cancel(NotificationUtils.PUSH_NOTIFICATION_ID)
   }
 
   @ReactMethod
@@ -151,13 +157,13 @@ class PushNotifierModule(reactContext: ReactApplicationContext) : ReactContextBa
   }
 
   @ReactMethod
-  fun showIncomingCall(notificationData: ReadableMap, promise: Promise) {
+  fun showIncomingCall(notificationData: ReadableMap) {
     val dictionary: HashMap<String, String> = HashMap<String, String>()
     dictionary.put("title", "hello")
     dictionary["body"] = "there"
     val activity = currentActivity
     if (activity != null) {
-      NotificationUtils.showActionNotification(appContext, notificationData, activity, promise)
+      NotificationUtils.showCallNotification(appContext, notificationData, activity)
     }
   }
 }
