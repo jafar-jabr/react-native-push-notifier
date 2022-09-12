@@ -13,7 +13,7 @@ type PushNotifierType = {
   isAppInForeground(): Promise<boolean>;
   userTrackAlert(): Promise<string>;
   audioPermission(): Promise<string>;
-  showIncomingCall(notificationData: Record<string, any>): Promise<string>;
+  showIncomingCall(notificationData: Record<string, any>): void;
   callPermissions(): Promise<any>;
 };
 
