@@ -1,17 +1,22 @@
 package com.reactnativepushnotifier
 
+import android.Manifest
 import android.app.NotificationManager
 import android.content.ContentResolver
 import android.content.Context
+import android.content.pm.PackageManager
 import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationManagerCompat
 import com.facebook.react.bridge.*
+import com.facebook.react.modules.permissions.PermissionsModule
 import com.reactnativepushnotifier.utils.NotificationUtils
 import com.reactnativepushnotifier.utils.ResourcesResolver
 import com.reactnativepushnotifier.utils.Utils
+import com.reactnativepushnotifier.utils.ViewUtils
 import java.util.*
 
 class PushNotifierModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
@@ -22,6 +27,7 @@ class PushNotifierModule(reactContext: ReactApplicationContext) : ReactContextBa
     override fun getName(): String {
         return "PushNotifier"
     }
+
 
   @ReactMethod
   fun showInfoPush(notificationData: ReadableMap, notificationId: Int, soundFile: String= "default") {
@@ -58,6 +64,11 @@ class PushNotifierModule(reactContext: ReactApplicationContext) : ReactContextBa
     notificationManager.cancelAll()
   }
 
+  fun cancelCallPushNotification() {
+    val notificationManager = NotificationManagerCompat.from(appContext)
+    notificationManager.cancel(NotificationUtils.PUSH_NOTIFICATION_ID)
+  }
+
   @ReactMethod
   fun stopAlert(s: String) {
     ringtone?.stop()
@@ -67,5 +78,108 @@ class PushNotifierModule(reactContext: ReactApplicationContext) : ReactContextBa
   @ReactMethod
   fun isAppInForeground(promise: Promise) {
     promise.resolve(Utils.isAppInForeground(appContext))
+  }
+
+  @ReactMethod
+  fun callPermissions(promise: Promise) {
+    val dictionary: HashMap<String, String> = HashMap<String, String>()
+    dictionary.put("title", "hello")
+    dictionary["body"] = "there"
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      val permissions = arrayOf(
+        Manifest.permission.RECORD_AUDIO,
+        Manifest.permission.CALL_PHONE,
+        Manifest.permission.READ_PHONE_STATE,
+        Manifest.permission.READ_PHONE_NUMBERS,
+        Manifest.permission.MANAGE_OWN_CALLS,
+        Manifest.permission.READ_CONTACTS
+      )
+      val allPermissionaw = Arguments.createArray()
+      for (allPermission in permissions) {
+        allPermissionaw.pushString(allPermission)
+      }
+      reactApplicationContext.getNativeModule<PermissionsModule>(PermissionsModule::class.java)
+        ?.requestMultiplePermissions(allPermissionaw, object : Promise {
+          override fun resolve(value: Any?) {
+              val grantedPermission = value as WritableMap?
+              val grantedResult = IntArray(permissions.size)
+              for (i in permissions.indices) {
+                val perm: String = permissions.get(i)
+                grantedResult[i] =
+                  if (grantedPermission!!.getString(perm) == "granted") PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
+              }
+            promise.resolve(true)
+          }
+
+          override fun reject(code: String, message: String) {
+            promise.resolve(null)
+          }
+
+          override fun reject(code: String, throwable: Throwable) {
+            promise.resolve(null)
+          }
+
+          override fun reject(code: String, message: String, throwable: Throwable) {
+            promise.resolve(null)
+          }
+
+          override fun reject(throwable: Throwable) {
+            promise.resolve(null)
+          }
+
+          override fun reject(throwable: Throwable, userInfo: WritableMap) {
+            promise.resolve(null)
+          }
+
+          override fun reject(code: String, userInfo: WritableMap) {
+            promise.resolve(null)
+          }
+
+          override fun reject(code: String, throwable: Throwable, userInfo: WritableMap) {
+            promise.resolve(null)
+          }
+
+          override fun reject(code: String, message: String, userInfo: WritableMap) {
+            promise.resolve(null)
+          }
+
+          override fun reject(
+              code: String,
+              message: String,
+              throwable: Throwable,
+              userInfo: WritableMap
+          ) {
+          }
+
+          override fun reject(message: String) {
+          }
+        })
+    }
+  }
+
+  @ReactMethod
+  fun showIncomingCall(notificationData: ReadableMap) {
+    val dictionary: HashMap<String, String> = HashMap<String, String>()
+    dictionary.put("title", "hello")
+    dictionary["body"] = "there"
+    val activity = currentActivity
+    if (activity != null) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        NotificationUtils.showCallNotification(appContext, notificationData, activity)
+      }
+    }
+  }
+
+  @ReactMethod
+  fun showFullScreenIncomingCall(notificationData: ReadableMap) {
+    val dictionary: HashMap<String, String> = HashMap<String, String>()
+    dictionary.put("title", "hello")
+    dictionary["body"] = "there"
+    val activity = currentActivity
+    if (activity != null) {
+        ViewUtils.showCallView(appContext, notificationData, activity)
+
+    }
   }
 }

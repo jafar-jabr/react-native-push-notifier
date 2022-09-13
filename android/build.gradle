@@ -3,12 +3,13 @@ buildscript {
   def kotlin_version = rootProject.ext.has('kotlinVersion') ? rootProject.ext.get('kotlinVersion') : project.properties['PushNotifier_kotlinVersion']
 
   repositories {
+    mavenCentral()
     google()
     jcenter()
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:7.0.3'
+    classpath 'com.android.tools.build:gradle:7.0.4'
     // noinspection DifferentKotlinGradleVersion
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
@@ -126,4 +127,7 @@ dependencies {
   // noinspection GradleDynamicVersion
   api 'com.facebook.react:react-native:+'
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  implementation "androidx.core:core-ktx:1.8.0"
+  implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
+
 }

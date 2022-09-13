@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="button_accept_call" />
+    <item type="id" name="btnAnswer" />
+    <item type="id" name="btnDecline" />
+    <item type="id" name="callerName" />
+</resources>
