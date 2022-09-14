@@ -6,7 +6,7 @@ import PushNotifier from 'react-native-push-notifier';
 export default function App() {
   React.useEffect(() => {
     PushNotifier.showInfoPush(
-      { title: 'title', body: 'body' },
+      { title: 'title2', body: 'body' },
       5346454,
       'default'
     );
